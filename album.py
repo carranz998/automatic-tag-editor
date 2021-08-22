@@ -9,9 +9,9 @@ class Album:
         directory = AlbumDirectory(path)
         scraper = AlbumDataScraper(self.artist, self.title)
 
-        self.tracks = scraper.tracks
-
-        directory.delete_files(['.flac', '.mp3'])
+        directory.flat()
+        directory.delete_all_subdirectories()
+        directory.delete_non_audio_files()
         directory.write(scraper.cover, 'cover.png')
 
-        print(self.tracks)
+        print(scraper.tracks)

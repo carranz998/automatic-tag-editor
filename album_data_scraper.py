@@ -12,8 +12,26 @@ class AlbumDataScraper:
         self.artist = artist
         self.title = title
         self.soup = BeautifulSoup(
-            requests.get(self.album_data_page).text, 'html.parser'
+            requests.get(self.__album_data_page).text, 'html.parser'
         )
+
+    @property
+    def __album_data_page(self):
+        """
+        Gets the web address of the album information page.
+        :return: Web address of the album information page.
+        """
+        request = 'https://www.discogs.com/search/?q=%s&type=master' % self.__quote_artist_title()
+        response = requests.get(request)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        href = soup.find_all(class_='thumbnail_link', href=True)[0]['href']
+        address = 'https://www.discogs.com/%s' % href
+
+        return address
+
+    def __quote_artist_title(self):
+        return quote('%s %s' % (self.artist, self.title))
 
     @property
     def cover(self):
@@ -34,23 +52,3 @@ class AlbumDataScraper:
         :return: List with the names of the tracks.
         """
         return [track.text for track in self.soup.find_all('span', class_='tracklist_track_title')]
-
-    @property
-    def album_data_page(self):
-        """
-        Gets the web address of the album information page.
-        :return: Web address of the album information page.
-        """
-        text_queried = '%s %s' % (self.artist, self.title)
-        quoted = quote(text_queried)
-
-        request = 'https://www.discogs.com/search/?q=%s&type=master' % quoted
-        response = requests.get(request)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        href = soup.find_all(class_='thumbnail_link', href=True)[0]['href']
-        address = 'https://www.discogs.com/%s' % href
-
-        return address
-
-
