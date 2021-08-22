@@ -6,9 +6,9 @@ from album import Album
 
 def _main():
     root_path = sys.argv[1]
-    for subdir, dirs, files in os.walk(root_path):
+    for subdir, dirs, _ in os.walk(root_path):
         if not dirs:
-            a = Album(subdir)
+            album = Album(subdir)
 
 
 if __name__ == '__main__':
