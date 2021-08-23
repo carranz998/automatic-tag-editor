@@ -1,7 +1,7 @@
-from urllib.parse import quote
-
 import requests
+
 from bs4 import BeautifulSoup
+from urllib.parse import quote
 
 
 class AlbumDataScraper:
@@ -46,9 +46,23 @@ class AlbumDataScraper:
         return None
 
     @property
-    def tracks(self):
+    def tracks_duration(self):
+        """
+        Extracts the durations of the album tracks.
+        :return: List with the names of the tracks.
+        """
+        return [
+            track_duration.text
+            for track_duration in self.soup.find_all('span', class_='tracklist_track_duration')
+        ]
+
+    @property
+    def tracks_name(self):
         """
         Extracts the names of the album tracks.
         :return: List with the names of the tracks.
         """
-        return [track.text for track in self.soup.find_all('span', class_='tracklist_track_title')]
+        return [
+            track_name.text
+            for track_name in self.soup.find_all('span', class_='tracklist_track_title')
+        ]

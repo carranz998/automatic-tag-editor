@@ -5,16 +5,12 @@ from album import Album
 
 
 def album_folders(root_path):
-    folders = []
-
     for artist in os.listdir(root_path):
         artist_folder_path = os.path.join(root_path, artist)
 
         for album in os.listdir(artist_folder_path):
             album_folder_path = os.path.join(artist_folder_path, album)
-            folders.append(album_folder_path)
-
-    return folders
+            yield album_folder_path
 
 
 def __main():
